@@ -9,7 +9,7 @@ export default function App() {
   const [isLandingShow, setIsLandingShow] = useState(true);
 
   return (
-    <div>
+    <div className="overflow-hidden">
       <AnimatePresence mode="wait">
         {isLandingShow ? (
           <motion.div

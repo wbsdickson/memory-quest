@@ -1,34 +1,33 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { cn, shuffleArray } from "@/lib/utils";
-import { WordPair } from "@/lib/types";
+import { shuffleArray } from "@/lib/utils";
+import { Answer, WordPair } from "@/lib/types";
 
 
-enum Language {
-  ENG = "ENG",
-  FR = "FR",
+export enum Language {
+  ENG = "eng",
+  FR = "fr",
 }
 
 
 interface Props {
   wordPairs: Array<WordPair>;
-  answer: { from: string, to: string }[];
-  setAnswer: Dispatch<SetStateAction<{ from: string, to: string }[]>>;
+  answers: Array<Answer>;
+  setAnswers: Dispatch<SetStateAction<Array<Answer>>>;
 }
 
-const GameBody = ({ wordPairs, answer, setAnswer }: Props) => {
+const GameBody = ({ wordPairs, answers, setAnswers }: Props) => {
   const padding = 30;
   const [isMount, setIsMount] = useState(false);
   const [svgSize, setSVGSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
-  const [newLineSource, setNewLineSource] = useState<{ id: string; language: Language } | null>(null);
+  const [newLineSource, setNewLineSource] = useState<{ word: string; language: Language } | null>(null);
   const [shuffledEngWords, setShuffledEngWords] = useState<string[]>([]);
   const [shuffledFrWords, setShuffledFrWords] = useState<string[]>([]);
 
   useEffect(() => {
     const updateSVGSize = () => {
-      console.log("update to", Math.max(window.innerWidth - 2 * padding, 700));
       setSVGSize({
         width: Math.max(window.innerWidth - 2 * padding, 500),
-        height: wordPairs.length * 60 + 100
+        height: wordPairs.length * 50 + 100
       });
     };
     updateSVGSize();
@@ -47,34 +46,40 @@ const GameBody = ({ wordPairs, answer, setAnswer }: Props) => {
   }, []);
 
   if (!isMount) return null;
-
   const handleWordOrDotClick = (word: string, language: Language) => {
-    const id = `${language}-${word}`;
     // Check if the word is already linked
-    const isAlreadyLinked = answer.some(line => line.from === id || line.to === id);
+    const isAlreadyLinked = answers.some(line => line[Language.ENG] === word || line[Language.FR] === word);
     if (isAlreadyLinked) return; // Prevent linking more than once
 
 
     if (!newLineSource) {
-      setNewLineSource({ id, language });
+      setNewLineSource({ word, language });
       return;
     }
-    if (newLineSource.id === id) {
+    if (newLineSource.word === word) {
       setNewLineSource(null); // Reset for unselection
     }
     if (newLineSource.language !== language) {
-      setAnswer([...answer, { from: newLineSource.id, to: id }]);
+
+      setAnswers([...answers,
+        {
+          [Language.ENG]: "",
+          [Language.FR]: "",
+          [newLineSource.language]: newLineSource.word,
+          [language]: word
+
+        }]);
       setNewLineSource(null); // Reset after linking
     }
   };
 
   const handleLineClick = (index: number) => {
-    setAnswer(answer.filter((_, idx) => idx !== index));
+    setAnswers(answers.filter((_, idx) => idx !== index));
   };
   return (
     <>
       <svg width={svgSize.width} height={svgSize.height}
-           className={cn("m-auto")}>
+           className="m-auto pb-6">
 
 
         {shuffledEngWords.map((engWord, index) => {
@@ -82,11 +87,9 @@ const GameBody = ({ wordPairs, answer, setAnswer }: Props) => {
           const yPosition = 130 + 40 * index;
           const englishXPosition = padding; // Leftmost position for English
           const frenchXPosition = svgSize.width - padding - 150; // Rightmost position for French
-          const engId = `ENG-${(engWord)}`;
-          const frId = `FR-${(frWord)}`;
-          const isSelected = (id: string) => newLineSource && newLineSource.id === id ? "selected" : "";
-          const isEngAlreadyLinked = answer.some(line => line.from === engId || line.to === engId) ? "linked" : "";
-          const isFrAlreadyLinked = answer.some(line => line.from === frId || line.to === frId) ? "linked" : "";
+          const isSelected = (id: string) => newLineSource && newLineSource.word === id ? "selected" : "";
+          const isEngAlreadyLinked = answers.some(line => line[Language.ENG] === engWord) ? "linked" : "";
+          const isFrAlreadyLinked = answers.some(line => line[Language.FR] === frWord) ? "linked" : "";
 
           return (
             <g key={index}>
@@ -107,7 +110,7 @@ const GameBody = ({ wordPairs, answer, setAnswer }: Props) => {
               )}
               <foreignObject
                 x={englishXPosition} y={yPosition - 20} width="170" height="40"
-                className={`text-container en ${isSelected(engId)} ${isEngAlreadyLinked}`}
+                className={`text-container en ${isSelected(engWord)} ${isEngAlreadyLinked}`}
                 onClick={() => handleWordOrDotClick(engWord, Language.ENG)}
               >
                 <text
@@ -123,7 +126,7 @@ const GameBody = ({ wordPairs, answer, setAnswer }: Props) => {
                 fill="black"
               />
               <foreignObject x={frenchXPosition - 40} y={yPosition - 20} width="170" height="40"
-                             className={`text-container fr ${isSelected(frId)} ${isFrAlreadyLinked}`}
+                             className={`text-container fr ${isSelected(frWord)} ${isFrAlreadyLinked}`}
                              onClick={() => handleWordOrDotClick(frWord, Language.FR)}
               >
                 <text
@@ -143,23 +146,23 @@ const GameBody = ({ wordPairs, answer, setAnswer }: Props) => {
             </g>
           );
         })}
-        {answer.map((line, idx) => {
-          const sourceWord = line.from.substring(line.from.indexOf("-") + 1);
-          const targetWord = line.to.substring(line.to.indexOf("-") + 1);
-          const sourceIndex = shuffledEngWords.findIndex(word => sourceWord === word || sourceWord === shuffledFrWords[shuffledEngWords.indexOf(word)]);
-          const targetIndex = shuffledEngWords.findIndex(word => targetWord === word || targetWord === shuffledFrWords[shuffledEngWords.indexOf(word)]);
+        {answers.map((line, idx) => {
+          const sourceWord = line[Language.ENG];
+          const targetWord = line[Language.FR];
+          const sourceIndex = shuffledEngWords.findIndex(word => sourceWord === word);
+          const targetIndex = shuffledFrWords.findIndex(word => targetWord === word);
           const sourcePosition = sourceIndex !== -1 ? {
-            x: line.from.startsWith(Language.ENG) ? padding + 150 : svgSize.width - padding - 175,
+            x: padding + 150,
             y: 130 + 40 * sourceIndex
           } : null;
           const targetPosition = targetIndex !== -1 ? {
-            x: line.to.startsWith(Language.FR) ? svgSize.width - padding - 175 : padding + 150,
+            x: svgSize.width - padding - 175,
             y: 130 + 40 * targetIndex
           } : null;
           return sourcePosition && targetPosition ? (
             <line
               className="line"
-              key={`${line.from}-${line.to}`}
+              key={`${line[Language.ENG]}-${line[Language.FR]}`}
               x1={sourcePosition.x}
               y1={sourcePosition.y}
               x2={targetPosition.x}

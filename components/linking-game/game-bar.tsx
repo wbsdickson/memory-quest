@@ -1,17 +1,19 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Pause, Play, RotateCcw, SendHorizontal } from "lucide-react";
+import { Bot, Pause, Play, RotateCcw, SendHorizontal } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTimer } from "react-timer-hook";
+import { Answer } from "@/lib/types";
 
 interface Props {
-  answer: Array<{ from: string; to: string }>;
+  answers: Array<Answer>;
   onResetAnswer: () => void;
   onGrade: () => void;
+  onAutoFill: () => void;
 }
 
-const GameBar = ({ answer, onResetAnswer, onGrade }: Props) => {
+const GameBar = ({ answers, onAutoFill, onResetAnswer, onGrade }: Props) => {
 
   const getNewTimer = () => {
     const expiryTimestamp = new Date();
@@ -20,19 +22,15 @@ const GameBar = ({ answer, onResetAnswer, onGrade }: Props) => {
   };
 
   const {
-    totalSeconds,
     seconds,
     minutes,
-    hours,
-    days,
     isRunning,
-    start,
     pause,
     resume,
     restart
   } = useTimer({ autoStart: true, expiryTimestamp: getNewTimer(), onExpire: () => console.warn("onExpire called") });
 
-  const isAnsweredAll = answer.length === 8;
+  const isAnsweredAll = answers.length === 20;
 
 
   const onReset = () => {
@@ -48,24 +46,45 @@ const GameBar = ({ answer, onResetAnswer, onGrade }: Props) => {
     }
   };
 
+  const timeRemaining = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        className="p-2 bg-gradient-to-r from-yellow-600 to-red-600 fixed inset-x-0 bottom-10 h-8 w-[500px] mx-auto shadow rounded-md flex items-center justify-end"
-        key="gameBar"
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -10, opacity: 0 }}
-        transition={{ duration: .2, delay: .2 }}
-      >
-        <div className="absolute left-0 right-0 mx-auto w-[60px] text-center"> {/* Center the timer */}
-          <div className="rounded-md bg-gray-300 p-1 h-7 flex items-center justify-center">
-            {`${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`}
+    <TooltipProvider delayDuration={.2}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          className="p-2 bg-gradient-to-r from-yellow-600 to-red-600 fixed inset-x-0 bottom-4 h-8 w-[500px] mx-auto shadow rounded-md flex items-center justify-between"
+          key="gameBar"
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -10, opacity: 0 }}
+          transition={{ duration: .2, delay: .2 }}
+        >
+          <div className="absolute left-0 right-0 mx-auto w-[60px] text-center"> {/* Center the timer */}
+            <div className="rounded-md bg-gray-300 p-1 h-7 flex items-center justify-center">
+              <Tooltip>
+                <TooltipTrigger>
+                  {timeRemaining}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Time Remaining</p>
+                </TooltipContent>
+              </Tooltip>
+
+            </div>
           </div>
-        </div>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" className="w-7 h-7 p-1" onClick={onAutoFill}>
+                <Bot />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>AI Assistant</p>
+            </TooltipContent>
+          </Tooltip>
 
 
-        <TooltipProvider delayDuration={.2}>
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -115,7 +134,7 @@ const GameBar = ({ answer, onResetAnswer, onGrade }: Props) => {
                 <Button disabled={!isAnsweredAll} variant="outline"
                         className="h-7 p-1 flex gap-4 w-[90px]"
                         onClick={onGrade}>
-                  {answer.length} / 8
+                  {answers.length} / 20
                   <SendHorizontal size={18} />
                 </Button>
               </TooltipTrigger>
@@ -124,12 +143,12 @@ const GameBar = ({ answer, onResetAnswer, onGrade }: Props) => {
               </TooltipContent>
             </Tooltip>
           </div>
-        </TooltipProvider>
-      </motion.div>
+
+        </motion.div>
 
 
-    </AnimatePresence>
-
+      </AnimatePresence>
+    </TooltipProvider>
   );
 };
 
