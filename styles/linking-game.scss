@@ -1,0 +1,39 @@
+
+.line {
+  fill: navy;
+  stroke: navy;
+
+  &:hover {
+    cursor: pointer;
+    fill: red;
+    stroke: red;
+  }
+}
+
+.text-container {
+  padding: .5rem;
+  border-radius: .5rem;
+  cursor: pointer;
+
+  &.en, &.fr {
+    background-color: transparent;
+    transition: background-color 0.2s ease; /* Smooth transition for hover effect */
+  }
+
+  &.fr {
+    padding-left: 40px;
+  }
+
+  &.en:hover, &.fr:hover {
+    background-color: #dcdbdb;
+  }
+
+  &.selected {
+    background-color: #c7c6c6;
+  }
+
+  &.linked {
+    opacity: .3;
+  }
+}
+

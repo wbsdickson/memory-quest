@@ -2,7 +2,8 @@
 
 import {useEffect, useState} from "react";
 import {shuffleArray} from "@/utils";
-import "@/styles/svg-grid.scss";
+import "@/styles/linking-game.scss";
+import {cn} from "@/lib/utils";
 
 enum Language {
     ENG = "ENG",
@@ -14,7 +15,7 @@ type WordPair = {
     fr: string;
 };
 
-const wordPairs: WordPair[] = [
+const wordPairs: Array<WordPair> = [
     {eng: "Hello", fr: "Bonjour"},
     {eng: "Goodbye", fr: "Au revoir"},
     {eng: "Please", fr: "S'il vous plaît"},
@@ -25,8 +26,11 @@ const wordPairs: WordPair[] = [
     {eng: "Sorry", fr: "Désolé"},
 ];
 
+interface Props {
+    className?: string
+}
 
-export function SVGGrid() {
+export function LinkingGame({className}: Props) {
     const padding = 30
     const [isMount, setIsMount] = useState(false);
     const [svgSize, setSVGSize] = useState<{ width: number; height: number }>({width: 0, height: 0});
@@ -66,9 +70,15 @@ export function SVGGrid() {
         const isAlreadyLinked = lines.some(line => line.from === id || line.to === id);
         if (isAlreadyLinked) return; // Prevent linking more than once
 
+
         if (!newLineSource) {
             setNewLineSource({id, language});
-        } else if (newLineSource.language !== language) {
+            return
+        }
+        if (newLineSource.id === id) {
+            setNewLineSource(null); // Reset for unselection
+        }
+        if (newLineSource.language !== language) {
             setLines([...lines, {from: newLineSource.id, to: id}]);
             setNewLineSource(null); // Reset after linking
         }
@@ -78,12 +88,9 @@ export function SVGGrid() {
         setLines(lines.filter((_, idx) => idx !== index));
     };
 
-    console.log('newLineSource= ', newLineSource)
-
-
     return (
         <svg width={svgSize.width} height={svgSize.height}
-             className="m-auto">
+             className={cn("m-auto", className)}>
             {shuffledEngWords.map((engWord, index) => {
                 const frWord = shuffledFrWords[index];
                 const yPosition = 30 + 60 * index;
@@ -91,7 +98,7 @@ export function SVGGrid() {
                 const frenchXPosition = svgSize.width - padding - 150; // Rightmost position for French
                 const engId = `ENG-${(engWord)}`;
                 const frId = `FR-${(frWord)}`;
-                const isSelected = (id: string) => newLineSource && newLineSource.id === id ? 'selected' : 'w';
+                const isSelected = (id: string) => newLineSource && newLineSource.id === id ? 'selected' : "";
                 const isEngAlreadyLinked = lines.some(line => line.from === engId || line.to === engId) ? "linked" : "";
                 const isFrAlreadyLinked = lines.some(line => line.from === frId || line.to === frId) ? "linked" : "";
 
@@ -113,8 +120,6 @@ export function SVGGrid() {
                             cy={yPosition}
                             r="5"
                             fill="black"
-                            onClick={() => handleWordOrDotClick(engWord, Language.ENG)}
-                            className={`circle ${isSelected(engId)}`}
                         />
                         <foreignObject x={frenchXPosition - 40} y={yPosition - 20} width="170" height="40"
                                        className={`text-container fr ${isSelected(frId)} ${isFrAlreadyLinked}`}
@@ -133,8 +138,6 @@ export function SVGGrid() {
                             cy={yPosition}
                             r="5"
                             fill="black"
-                            onClick={() => handleWordOrDotClick(frWord, Language.FR)}
-                            className={`circle ${isSelected(frId)}`}
                         />
                     </g>
                 );
