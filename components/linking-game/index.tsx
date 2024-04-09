@@ -20,14 +20,19 @@ const wordPairs: Array<WordPair> = [
 export function Index() {
   const [answer, setAnswer] = useState<{ from: string; to: string }[]>([]);
 
-  const resetAnswer = () => {
+  const onResetAnswer = () => {
     setAnswer([]);
   };
 
+  const onGrade = () => {
+    console.log(answer);
+
+  };
+
   return (
-    <>
+    <div className="h-screen w-screen">
       <GameBody answer={answer} setAnswer={setAnswer} wordPairs={wordPairs} />
-      <GameBar answer={answer} resetAnswer={resetAnswer} />
-    </>
+      <GameBar answer={answer} onResetAnswer={onResetAnswer} onGrade={onGrade} />
+    </div>
   );
 }
