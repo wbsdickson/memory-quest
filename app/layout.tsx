@@ -1,20 +1,24 @@
-import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "../styles/globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({subsets: ["latin"]});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Memory Quest",
-    description: "Learn new words everyday",
+  title: "Memory Quest",
+  description: "Learn new words everyday"
 };
 
-export default function RootLayout({children}: Readonly<{
-    children: React.ReactNode;
+export default function RootLayout({ children }: Readonly<{
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>{children}</body>
-        </html>
-    );
+  return (
+    <html lang="en" suppressHydrationWarning>
+    <body className={inter.className}>
+    {children}
+    <Toaster position="top-center" expand visibleToasts={2} />
+    </body>
+    </html>
+  );
 }

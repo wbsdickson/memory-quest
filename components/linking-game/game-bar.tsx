@@ -1,19 +1,22 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Bot, Pause, Play, RotateCcw, SendHorizontal } from "lucide-react";
+import { Bot, Pause, Play, RotateCcw, SendHorizontal, Settings } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTimer } from "react-timer-hook";
 import { Answer } from "@/lib/types";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import WordPairsSetup from "@/components/word-pairs-setup";
 
 interface Props {
   answers: Array<Answer>;
   onResetAnswer: () => void;
   onGrade: () => void;
   onAutoFill: () => void;
+  disabled: boolean;
 }
 
-const GameBar = ({ answers, onAutoFill, onResetAnswer, onGrade }: Props) => {
+const GameBar = ({ disabled, answers, onAutoFill, onResetAnswer, onGrade }: Props) => {
 
   const getNewTimer = () => {
     const expiryTimestamp = new Date();
@@ -28,7 +31,7 @@ const GameBar = ({ answers, onAutoFill, onResetAnswer, onGrade }: Props) => {
     pause,
     resume,
     restart
-  } = useTimer({ autoStart: true, expiryTimestamp: getNewTimer(), onExpire: () => console.warn("onExpire called") });
+  } = useTimer({ autoStart: true, expiryTimestamp: getNewTimer(), onExpire: () => onGrade() });
 
   const isAnsweredAll = answers.length === 20;
 
@@ -73,22 +76,45 @@ const GameBar = ({ answers, onAutoFill, onResetAnswer, onGrade }: Props) => {
             </div>
           </div>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" className="w-7 h-7 p-1" onClick={onAutoFill}>
-                <Bot />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>AI Assistant</p>
-            </TooltipContent>
-          </Tooltip>
+          <div className="flex space-x-2">
+            <Drawer>
+              <DrawerTrigger className="h-7">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="icon" className="w-7 h-7 p-1">
+                      <Settings />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Settings</p>
+                  </TooltipContent>
+                </Tooltip></DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Construct your own dictionary</DrawerTitle>
+                </DrawerHeader>
+                <WordPairsSetup />
+              </DrawerContent>
+            </Drawer>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="icon" className="w-7 h-7 p-1" onClick={onAutoFill}>
+                  <Bot />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>AI Assistant</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
 
 
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" className="w-7 h-7 p-1" onClick={onPauseOrResume}>
+                <Button disabled={disabled} variant="outline" size="icon" className="w-7 h-7 p-1"
+                        onClick={onPauseOrResume}>
                   <AnimatePresence mode="wait">
                     {isRunning ? (
                       <motion.div
@@ -120,18 +146,18 @@ const GameBar = ({ answers, onAutoFill, onResetAnswer, onGrade }: Props) => {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" className="w-7 h-7 p-1" onClick={onReset}>
+                <Button disabled={disabled} variant="outline" size="icon" className="w-7 h-7 p-1" onClick={onReset}>
                   <RotateCcw />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Reset</p>
+                <p>Restart</p>
               </TooltipContent>
             </Tooltip>
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button disabled={!isAnsweredAll} variant="outline"
+                <Button disabled={!isAnsweredAll || disabled} variant="outline"
                         className="h-7 p-1 flex gap-4 w-[90px]"
                         onClick={onGrade}>
                   {answers.length} / 20

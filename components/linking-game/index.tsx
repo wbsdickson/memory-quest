@@ -4,42 +4,44 @@ import "@/styles/linking-game.scss";
 import GameBar from "@/components/linking-game/game-bar";
 import GameBody from "@/components/linking-game/game-body";
 import { Answer, WordPair } from "@/lib/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { delay, shuffleArray } from "@/lib/utils";
-
-const wordPairs: Array<WordPair> = [
-  { eng: "Hello", fr: "Bonjour" },
-  { eng: "Goodbye", fr: "Au revoir" },
-  { eng: "Please", fr: "S'il vous plaît" },
-  { eng: "Thank you", fr: "Merci" },
-  { eng: "Yes", fr: "Oui" },
-  { eng: "No", fr: "Non" },
-  { eng: "Excuse me", fr: "Excusez-moi" },
-  { eng: "Sorry", fr: "Désolé" },
-  { eng: "Bicycle", fr: "Vélo" },
-  { eng: "Railroad", fr: "Chemin de fer" },
-  { eng: "Folder", fr: "Dossier" },
-  { eng: "Butter", fr: "Beurre" },
-  { eng: "Cereal", fr: "Céréale" },
-  { eng: "Hungry", fr: "Faim" },
-  { eng: "Forest", fr: "Forêt" },
-  { eng: "Camel", fr: "Chameau" },
-  { eng: "Weekly", fr: "Hebdomadaire" },
-  { eng: "Desk", fr: "Bureau" },
-  { eng: "Sibling", fr: "Frère et sœur" },
-  { eng: "Limestone", fr: "Calcaire" }
-];
+import { getCookie, setCookie } from "cookies-next";
+import { wordPairs } from "@/constants/word-pairs";
 
 
 export function Index() {
   const [answers, setAnswers] = useState<Array<Answer>>([]);
+  const [storedWordPairs, setStoredWordPairs] = useState<Array<WordPair>>([]);
+  const [isGameBarDisabled, setIsGameBarDisabled] = useState(false);
+
+  const initStoredWordPairs = () => {
+    const cookieWordPairs = getCookie("word_pairs");
+    if (!cookieWordPairs) {
+      const randomWordPairs = wordPairs.length > 20 ? shuffleArray(wordPairs).slice(0, 20) : wordPairs;
+      setCookie("word_pairs", JSON.stringify(randomWordPairs));
+      setStoredWordPairs(randomWordPairs);
+    } else {
+      const storedPairs = JSON.parse(cookieWordPairs);
+      const selectedWordPairs = storedPairs.length > 20 ? shuffleArray(storedPairs).slice(0, 20) : storedPairs;
+      console.log("cookieWordPairs = ", selectedWordPairs);
+      setStoredWordPairs(selectedWordPairs);
+    }
+  };
+  useEffect(() => {
+    initStoredWordPairs();
+
+  }, []);
 
   const onResetAnswer = () => {
     setAnswers([]);
+    initStoredWordPairs();
   };
 
   const onAutoFill = async () => {
-    const pairsToAnswer = shuffleArray(wordPairs); // Shuffle wordPairs to get random order
+    setAnswers([]);
+    setIsGameBarDisabled(true);
+    const pairsToAnswer = shuffleArray(storedWordPairs); // Shuffle wordPairs to get random order
 
     for (let index = 0; index < pairsToAnswer.length; index++) {
       setAnswers(prevAnswers => [...prevAnswers, {
@@ -48,6 +50,7 @@ export function Index() {
       }]);
       await delay(200);
     }
+    setIsGameBarDisabled(false);
   };
   const onGrade = () => {
     let correctCount = 0;
@@ -65,10 +68,14 @@ export function Index() {
     return scorePercentage;
   };
 
+  console.log("answer :", answers);
+
   return (
     <div className="h-screen w-screen">
-      <GameBody answers={answers} setAnswers={setAnswers} wordPairs={wordPairs} />
-      <GameBar answers={answers} onAutoFill={onAutoFill} onResetAnswer={onResetAnswer} onGrade={onGrade} />
+      <GameBody answers={answers} setAnswers={setAnswers} wordPairs={storedWordPairs} />
+      <GameBar disabled={isGameBarDisabled} answers={answers} onAutoFill={onAutoFill} onResetAnswer={onResetAnswer}
+               onGrade={onGrade}
+      />
     </div>
   );
 }

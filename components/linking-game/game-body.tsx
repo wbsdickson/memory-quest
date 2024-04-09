@@ -16,6 +16,7 @@ interface Props {
 }
 
 const GameBody = ({ wordPairs, answers, setAnswers }: Props) => {
+
   const padding = 30;
   const [isMount, setIsMount] = useState(false);
   const [svgSize, setSVGSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
@@ -34,7 +35,7 @@ const GameBody = ({ wordPairs, answers, setAnswers }: Props) => {
     const resizeListener = () => updateSVGSize();
     window.addEventListener("resize", resizeListener);
     return () => window.removeEventListener("resize", resizeListener);
-  }, [padding]);
+  }, [wordPairs, padding]);
 
   useEffect(() => {
     const engWords = wordPairs.map(pair => pair.eng);
@@ -43,7 +44,7 @@ const GameBody = ({ wordPairs, answers, setAnswers }: Props) => {
     setShuffledFrWords(shuffleArray(frWords));
 
     setIsMount(true);
-  }, []);
+  }, [wordPairs]);
 
   if (!isMount) return null;
   const handleWordOrDotClick = (word: string, language: Language) => {
