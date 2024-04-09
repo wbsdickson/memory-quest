@@ -1,0 +1,51 @@
+.circle {
+  &:hover {
+    fill: var(--light-gray);
+    cursor: pointer;
+  }
+}
+
+.line {
+  fill: navy;
+  stroke: navy;
+
+  &:hover {
+    cursor: pointer;
+    fill: red;
+    stroke: red;
+  }
+}
+
+.text-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+  text-decoration: underline;
+
+  &.en, &.fr {
+    background-color: transparent;
+    transition: background-color 0.2s ease; /* Smooth transition for hover effect */
+  }
+
+  &.fr {
+    padding-left: 40px;
+  }
+
+  &.en:hover, &.fr:hover {
+    background-color: var(--light-gray); /* Lighter background on hover for better readability and interaction */
+  }
+
+  &.selected {
+    background-color: var(--light-gray);
+  }
+
+  &.linked {
+    text-decoration: none;
+    opacity: .6;
+  }
+}
+
