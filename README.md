@@ -11,6 +11,9 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+![Landing](https://github.com/wbsdickson/memory-quest/blob/main/public/landing.png?raw=true)
+![Customization](https://github.com/wbsdickson/memory-quest/blob/main/public/vocab_custimization.png?raw=true)
+
 ## Features
 
 Users can enjoy a variety of features, including:
