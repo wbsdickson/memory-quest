@@ -2,14 +2,15 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Page } from "@/app/page";
 
 interface Props {
-  onPlay: () => void;
+  toPage: (page: Page) => void;
 }
 
-const Landing = ({ onPlay }: Props) => {
+const Landing = ({ toPage }: Props) => {
   return (
-    <div className={cn("h-screen w-screen place-content-center space-y-20 grid")}>
+    <div className={cn("grid h-screen w-screen place-content-center")}>
       <Image
         className="flex items-center"
         placeholder="empty"
@@ -19,7 +20,23 @@ const Landing = ({ onPlay }: Props) => {
         alt="logo"
         src="/logo.png"
       />
-      <Button className="bg-gradient-to-r from-yellow-600 to-red-600" onClick={onPlay}>Go</Button>
+      <div className="mt-20 flex flex-col space-y-6">
+        <Button
+          className="bg-gradient-to-r from-yellow-600 to-red-600"
+          onClick={() => {
+            toPage("linkingGame");
+          }}
+        >
+          Go
+        </Button>
+        <Button
+          onClick={() => {
+            toPage("about");
+          }}
+        >
+          About
+        </Button>
+      </div>
     </div>
   );
 };

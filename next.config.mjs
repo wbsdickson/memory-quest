@@ -3,7 +3,7 @@
 
 const nextConfig = {
   images: {
-    domains: ["avatar.vercel.sh"]
+    domains: ["avatar.vercel.sh", "avatars.githubusercontent.com"]
   }
 };
 

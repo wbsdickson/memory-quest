@@ -4,9 +4,11 @@ import { Index } from "@/components/linking-game";
 import Landing from "@/components/landing";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import About from "@/components/about";
 
+export type Page = "landing" | "linkingGame" | "about";
 export default function App() {
-  const [showPage, setShowPage] = useState<"landing" | "linkingGame">(
+  const [showPage, setShowPage] = useState<"landing" | "linkingGame" | "about">(
     "landing",
   );
 
@@ -21,7 +23,7 @@ export default function App() {
             exit={{ y: -10, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Landing onPlay={() => setShowPage("linkingGame")} />
+            <Landing toPage={(page: Page) => setShowPage(page)} />
           </motion.div>
         )}
 
@@ -33,11 +35,19 @@ export default function App() {
             exit={{ y: -10, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Index
-              returnLanding={() => {
-                setShowPage("landing");
-              }}
-            />
+            <Index toPage={(page: Page) => setShowPage(page)} />
+          </motion.div>
+        )}
+
+        {showPage === "about" && (
+          <motion.div
+            key="about"
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <About toPage={(page: Page) => setShowPage(page)} />
           </motion.div>
         )}
       </AnimatePresence>
