@@ -82,29 +82,17 @@ const GameBar = ({
     <TooltipProvider delayDuration={0.2}>
       <AnimatePresence mode="wait">
         <motion.div
-          className="fixed inset-x-0 bottom-4 mx-auto flex h-8 w-[500px] items-center justify-between rounded-md bg-gradient-to-r from-yellow-600 to-red-600 px-1 shadow"
+          className="fixed inset-x-0 bottom-4 mx-auto flex h-8 w-full items-center justify-between rounded-md bg-gradient-to-r from-yellow-600 to-red-600 px-1 shadow md:w-[550px]"
           key="gameBar"
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2, delay: 0.2 }}
         >
-          <div className="absolute left-0 right-0 mx-auto w-[100px] text-center">
-            <div className="flex h-7 items-center justify-center rounded-md bg-gray-300 p-1">
-              <Tooltip>
-                <TooltipTrigger>{timeRemaining}</TooltipTrigger>
-                <TooltipContent>
-                  <p>Time Remaining</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
-
           <div className="flex space-x-1">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  disabled={isAnsweredAll}
                   variant="outline"
                   size="icon"
                   className="h-7 w-7 p-1"
@@ -146,7 +134,7 @@ const GameBar = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  disabled={isAnsweredAll}
+                  disabled={isAnsweredAll || disabled}
                   variant="outline"
                   size="icon"
                   className="h-7 w-7 p-1"
@@ -157,6 +145,15 @@ const GameBar = ({
               </TooltipTrigger>
               <TooltipContent>
                 <p>AI Assistant</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+
+          <div className="mx-1 flex h-7 flex-grow items-center justify-center rounded-md bg-gray-300 p-1 text-center">
+            <Tooltip>
+              <TooltipTrigger>{timeRemaining}</TooltipTrigger>
+              <TooltipContent>
+                <p>Time Remaining</p>
               </TooltipContent>
             </Tooltip>
           </div>

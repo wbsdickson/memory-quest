@@ -17,7 +17,7 @@ const CertificateCard = React.forwardRef<HTMLDivElement, Props>(
     return (
       <div ref={ref} id={id}>
         <CardContainer className="inter-var" containerClassName="p-2">
-          <CardBody className="group/card relative h-[400px] w-[400px] rounded-xl  border border-black/[0.1] bg-gray-50 p-6 pt-64 dark:border-white/[0.2] dark:bg-black dark:hover:shadow-2xl  dark:hover:shadow-emerald-500/[0.1]">
+          <CardBody className="group/card relative h-[400px]  w-full rounded-xl border  border-black/[0.1] bg-gray-50 p-6 pt-64 dark:border-white/[0.2] dark:bg-black dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  md:w-1/2">
             <CardItem
               rotateX={20}
               rotateZ={-10}

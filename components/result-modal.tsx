@@ -94,7 +94,7 @@ const ResultModal = ({ onReturnLanding, open, setOpen, score }: Props) => {
   return (
     <>
       <AlertDialog open={open}>
-        <AlertDialogContent className="h-[600px] w-1/2 min-w-[500px] max-w-none rounded-md">
+        <AlertDialogContent className="h-[600px] w-full max-w-none rounded-md md:w-1/2">
           {!isCertGenerated ? (
             <AnimatePresence mode="wait">
               <motion.div
