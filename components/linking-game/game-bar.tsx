@@ -26,6 +26,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import WordPairsSetup from "@/components/word-pairs-setup";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface Props {
   answers: Array<Answer>;
@@ -35,6 +37,8 @@ interface Props {
   onReturnLanding: () => void;
   disabled: boolean;
 }
+
+const GAME_DURATION = 90; //seconds
 
 const GameBar = ({
   disabled,
@@ -46,7 +50,7 @@ const GameBar = ({
 }: Props) => {
   const getNewTimer = () => {
     const expiryTimestamp = new Date();
-    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 60);
+    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + GAME_DURATION);
     return expiryTimestamp;
   };
 
@@ -65,6 +69,7 @@ const GameBar = ({
 
   const onPauseOrResume = () => {
     if (isRunning) {
+      toast("🧐What can you do while the clock is paused?");
       pause();
     } else {
       resume();
@@ -217,7 +222,10 @@ const GameBar = ({
                 <Button
                   disabled={!isAnsweredAll || disabled}
                   variant="outline"
-                  className="flex h-7 w-[90px] gap-4 p-1"
+                  className={cn(
+                    "flex h-7 w-[90px] gap-4 p-1",
+                    isAnsweredAll && "bg-green-600 text-white",
+                  )}
                   onClick={() => {
                     pause();
                     onGrade();
