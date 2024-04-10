@@ -8,10 +8,12 @@ const MouseEnterContext = createContext<
 >(undefined);
 
 export const CardContainer = ({
-                                children,
-                                className,
-                                containerClassName
-                              }: {
+  id,
+  children,
+  className,
+  containerClassName,
+}: {
+  id?: string;
   children?: React.ReactNode;
   className?: string;
   containerClassName?: string;
@@ -41,12 +43,13 @@ export const CardContainer = ({
   return (
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
       <div
+        id={id}
         className={cn(
-          "py-20 flex items-center justify-center",
-          containerClassName
+          "flex items-center justify-center py-20",
+          containerClassName,
         )}
         style={{
-          perspective: "1000px"
+          perspective: "1000px",
         }}
       >
         <div
@@ -55,11 +58,11 @@ export const CardContainer = ({
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           className={cn(
-            "flex items-center justify-center relative transition-all duration-200 ease-linear",
-            className
+            "relative flex items-center justify-center transition-all duration-200 ease-linear",
+            className,
           )}
           style={{
-            transformStyle: "preserve-3d"
+            transformStyle: "preserve-3d",
           }}
         >
           {children}
@@ -70,9 +73,9 @@ export const CardContainer = ({
 };
 
 export const CardBody = ({
-                           children,
-                           className
-                         }: {
+  children,
+  className,
+}: {
   children: React.ReactNode;
   className?: string;
 }) => {
@@ -80,7 +83,7 @@ export const CardBody = ({
     <div
       className={cn(
         "h-96 w-96 [transform-style:preserve-3d]  [&>*]:[transform-style:preserve-3d]",
-        className
+        className,
       )}
     >
       {children}
@@ -89,17 +92,17 @@ export const CardBody = ({
 };
 
 export const CardItem = ({
-                           as: Tag = "div",
-                           children,
-                           className,
-                           translateX = 0,
-                           translateY = 0,
-                           translateZ = 0,
-                           rotateX = 0,
-                           rotateY = 0,
-                           rotateZ = 0,
-                           ...rest
-                         }: {
+  as: Tag = "div",
+  children,
+  className,
+  translateX = 0,
+  translateY = 0,
+  translateZ = 0,
+  rotateX = 0,
+  rotateY = 0,
+  rotateZ = 0,
+  ...rest
+}: {
   as?: React.ElementType;
   children: React.ReactNode;
   className?: string;
@@ -123,4 +126,3 @@ export const CardItem = ({
     </Tag>
   );
 };
-

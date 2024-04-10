@@ -200,7 +200,10 @@ const GameBar = ({
                   disabled={!isAnsweredAll || disabled}
                   variant="outline"
                   className="flex h-7 w-[90px] gap-4 p-1"
-                  onClick={onGrade}
+                  onClick={() => {
+                    pause();
+                    onGrade();
+                  }}
                 >
                   {answers.length} / 20
                   <SendHorizontal size={18} />

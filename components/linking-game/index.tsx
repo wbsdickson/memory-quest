@@ -96,7 +96,6 @@ export function Index() {
       />
       <ResultModal
         open={isShowResult}
-        resetAnswer={onResetAnswer}
         setOpen={setIsShowResult}
         score={score}
       />
