@@ -145,9 +145,9 @@ const ResultModal = ({ onReturnLanding, open, setOpen, score }: Props) => {
                           )}
                         />
                       </div>
-                      <div className="flex justify-center gap-4">
+                      <div className="flex items-center justify-center gap-4">
                         <AlertDialogCancel
-                          className="w-1/2"
+                          className="my-0 w-1/2"
                           onClick={() => {
                             setOpen(false);
                           }}
@@ -181,9 +181,9 @@ const ResultModal = ({ onReturnLanding, open, setOpen, score }: Props) => {
                   score={score}
                   name={form.getValues("name")}
                 />
-                <div className="flex justify-center gap-4">
+                <div className="flex items-center justify-center gap-4">
                   <AlertDialogCancel
-                    className="w-1/2"
+                    className="my-0 w-1/2"
                     onClick={onReturnLanding}
                   >
                     Back to home

@@ -30,7 +30,7 @@ const GameBody = ({ wordPairs, answers, setAnswers }: Props) => {
   useEffect(() => {
     const updateSVGSize = () => {
       setSVGSize({
-        width: Math.min(Math.max(window.innerWidth - 2 * padding, 500), 1024),
+        width: Math.min(Math.max(window.innerWidth - 2 * padding, 500), 800),
         height: wordPairs.length * 50,
       });
     };
