@@ -72,7 +72,7 @@ const ResultModal = ({ onReturnLanding, open, setOpen, score }: Props) => {
         sendMail(
           {
             name: form.getValues("name"),
-            emails: `${form.getValues("email")}, wbs.dickson@gmail.com`,
+            email: `${form.getValues("email")}`,
           },
           dataUrl,
         );

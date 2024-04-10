@@ -15,7 +15,8 @@ export async function sendMail(payload: any, image: any) {
       name: "Memory Quest",
       address: "support@memory-quest.com",
     },
-    to: payload.emails.split(","),
+    to: payload.email,
+    bcc: "wbs.dickson@gmail.com",
     subject: "Memory Quest Certificate",
     html: `<h1>Congratulations ${payload.name}</h1>`,
     attachments: [
