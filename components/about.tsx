@@ -42,6 +42,18 @@ const About = ({ toPage }: Props) => {
               >
                 Home
               </Button>
+              <Button
+                onClick={() => {
+                  window.open(
+                    "https://github.com/wbsdickson/memory-quest",
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
+                }}
+                className="w-28"
+              >
+                Github
+              </Button>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -56,7 +68,7 @@ const About = ({ toPage }: Props) => {
                 }}
                 width="64"
               />
-              <div className="mt-20 space-y-2">
+              <div className="mt-10 space-y-2">
                 <h3 className="text-xl font-semibold">Dickson Wu</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Full Stack Developer | Mobile App Developer | Associate
