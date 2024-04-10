@@ -3,11 +3,11 @@ import { WordPair } from "@/lib/types";
 export const wordPairs: Array<WordPair> = [
   { eng: "Hello", fr: "Bonjour" },
   { eng: "Goodbye", fr: "Au revoir" },
-  { eng: "Please", fr: "S'il vous plaît" },
+  { eng: "Coding", fr: "Codage" },
   { eng: "Thank you", fr: "Merci" },
   { eng: "Yes", fr: "Oui" },
   { eng: "No", fr: "Non" },
-  { eng: "Excuse me", fr: "Excusez-moi" },
+  { eng: "Excuse", fr: "Excuse" },
   { eng: "Sorry", fr: "Désolé" },
   { eng: "Bicycle", fr: "Vélo" },
   { eng: "Railroad", fr: "Chemin de fer" },
@@ -20,5 +20,5 @@ export const wordPairs: Array<WordPair> = [
   { eng: "Weekly", fr: "Hebdomadaire" },
   { eng: "Desk", fr: "Bureau" },
   { eng: "Sibling", fr: "Frère et sœur" },
-  { eng: "Limestone", fr: "Calcaire" }
+  { eng: "Limestone", fr: "Calcaire" },
 ];

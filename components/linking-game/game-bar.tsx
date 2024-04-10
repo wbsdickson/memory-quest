@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Bot,
+  Home,
   Pause,
   Play,
   RotateCcw,
@@ -31,6 +32,7 @@ interface Props {
   onResetAnswer: () => void;
   onGrade: () => void;
   onAutoFill: () => void;
+  onReturnLanding: () => void;
   disabled: boolean;
 }
 
@@ -40,6 +42,7 @@ const GameBar = ({
   onAutoFill,
   onResetAnswer,
   onGrade,
+  onReturnLanding,
 }: Props) => {
   const getNewTimer = () => {
     const expiryTimestamp = new Date();
@@ -82,8 +85,6 @@ const GameBar = ({
           transition={{ duration: 0.2, delay: 0.2 }}
         >
           <div className="absolute left-0 right-0 mx-auto w-[100px] text-center">
-            {" "}
-            {/* Center the timer */}
             <div className="flex h-7 items-center justify-center rounded-md bg-gray-300 p-1">
               <Tooltip>
                 <TooltipTrigger>{timeRemaining}</TooltipTrigger>
@@ -94,7 +95,24 @@ const GameBar = ({
             </div>
           </div>
 
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  disabled={isAnsweredAll}
+                  variant="outline"
+                  size="icon"
+                  className="h-7 w-7 p-1"
+                  onClick={onReturnLanding}
+                >
+                  <Home />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Home</p>
+              </TooltipContent>
+            </Tooltip>
+
             <Drawer>
               <DrawerTrigger className="h-7">
                 <Tooltip>
@@ -138,7 +156,7 @@ const GameBar = ({
             </Tooltip>
           </div>
 
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

@@ -33,6 +33,7 @@ interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   score: string;
+  onReturnLanding: () => void;
 }
 
 const formSchema = z.object({
@@ -42,7 +43,7 @@ const formSchema = z.object({
   email: z.string().email(),
 });
 
-const ResultModal = ({ open, setOpen, score }: Props) => {
+const ResultModal = ({ onReturnLanding, open, setOpen, score }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -183,9 +184,7 @@ const ResultModal = ({ open, setOpen, score }: Props) => {
                 <div className="flex justify-center gap-4">
                   <AlertDialogCancel
                     className="w-1/2"
-                    onClick={() => {
-                      window.location.reload();
-                    }}
+                    onClick={onReturnLanding}
                   >
                     Back to home
                   </AlertDialogCancel>

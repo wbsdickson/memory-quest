@@ -10,7 +10,11 @@ import { getCookie, setCookie } from "cookies-next";
 import { wordPairs } from "@/constants/word-pairs";
 import ResultModal from "@/components/result-modal";
 
-export function Index() {
+interface Props {
+  returnLanding: () => void;
+}
+
+export function Index({ returnLanding }: Props) {
   const [answers, setAnswers] = useState<Array<Answer>>([]);
   const [storedWordPairs, setStoredWordPairs] = useState<Array<WordPair>>([]);
   const [isGameBarDisabled, setIsGameBarDisabled] = useState(false);
@@ -93,11 +97,13 @@ export function Index() {
         onAutoFill={onAutoFill}
         onResetAnswer={onResetAnswer}
         onGrade={onGrade}
+        onReturnLanding={returnLanding}
       />
       <ResultModal
         open={isShowResult}
         setOpen={setIsShowResult}
         score={score}
+        onReturnLanding={returnLanding}
       />
     </div>
   );
